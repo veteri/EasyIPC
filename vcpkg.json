@@ -1,0 +1,10 @@
+{
+    "name": "easyipc",
+    "version": "1.0.0",
+    "dependencies": [
+        "nlohmann-json",
+        "fmt",
+        "nng",
+        "cryptopp"
+    ]
+}
