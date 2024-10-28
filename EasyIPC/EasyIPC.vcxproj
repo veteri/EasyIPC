@@ -162,6 +162,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Encryption\AesEaxEncryptionStrategy.h" />
     <ClInclude Include="src\Encryption\NoEncryptionStrategy.h" />
     <ClInclude Include="src\Server.h" />
     <ClInclude Include="src\Client.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Encryption\AesEaxEncryptionStrategy.cpp" />
     <ClCompile Include="src\Encryption\NoEncryptionStrategy.cpp" />
     <ClCompile Include="src\Server.cpp" />
     <ClCompile Include="src\Client.cpp" />

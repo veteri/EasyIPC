@@ -33,6 +33,9 @@
     <ClInclude Include="src\Encryption\NoEncryptionStrategy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Encryption\AesEaxEncryptionStrategy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EasyIPC.cpp">
@@ -51,6 +54,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Encryption\NoEncryptionStrategy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Encryption\AesEaxEncryptionStrategy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
