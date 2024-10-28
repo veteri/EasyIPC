@@ -98,7 +98,7 @@ namespace EasyIPC
 
 
 	template<typename HandlerType>
-	void NngIpcServer::on(const std::string& event, HandlerType handler)
+	void Server::on(const std::string& event, HandlerType handler)
 	{
 		// get the return type of the passed lambda function
 		using ReturnType = std::invoke_result_t<HandlerType, const nlohmann::json&>;
