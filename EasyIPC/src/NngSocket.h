@@ -5,6 +5,7 @@ namespace EasyIPC
 {
 	class NngSocket
 	{
+	public:
 		~NngSocket();
 
 		NngSocket();
