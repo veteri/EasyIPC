@@ -176,7 +176,6 @@
     <ClCompile Include="src\Server.cpp" />
     <ClCompile Include="src\Client.cpp" />
     <ClCompile Include="src\NngSocket.cpp" />
-    <ClCompile Include="src\EasyIPC.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
