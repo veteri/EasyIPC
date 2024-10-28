@@ -162,12 +162,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Server.h" />
     <ClInclude Include="src\Client.h" />
     <ClInclude Include="src\Encryption\EncryptionStrategy.h" />
     <ClInclude Include="src\NngSocket.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Server.cpp" />
     <ClCompile Include="src\Client.cpp" />
     <ClCompile Include="src\NngSocket.cpp" />
     <ClCompile Include="src\EasyIPC.cpp" />

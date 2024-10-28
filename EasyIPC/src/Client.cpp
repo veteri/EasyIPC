@@ -99,7 +99,7 @@ namespace EasyIPC
 		receiveThread = std::thread(&Client::receiveLoop, this);
 		connected = true;
 
-		std::cout << "[Client::connect] Started...\n";
+		std::cout << "[EasyIPC::Client::connect] Started...\n";
 	}
 
 	bool Client::isConnected() const
@@ -195,7 +195,7 @@ namespace EasyIPC
 
 	void Client::receiveLoop()
 	{
-		std::cout << "[Client::receiveLoop] Started...\n";
+		std::cout << "[EasyIPC::Client::receiveLoop] Started...\n";
 
 		while (isRunning)
 		{
@@ -238,12 +238,12 @@ namespace EasyIPC
 				eventHandlers[event](data);
 			else
 			{
-				std::cerr << "[Client::handleMessage] Unknown event: " << event << std::endl;
+				std::cerr << "[EasyIPC::Client::handleMessage] Unknown event: " << event << std::endl;
 			}
 		}
 		catch (const std::exception& exception)
 		{
-			std::cerr << "[Client::handleMessage] Exception: " << exception.what() << std::endl;
+			std::cerr << "[EasyIPC::Client::handleMessage] Exception: " << exception.what() << std::endl;
 		}
 	}
 
