@@ -1,9 +1,6 @@
 #pragma once
 
-#include "NngSocket.h"
 
-#include <nng/protocol/pubsub0/pub.h>
-#include <nng/protocol/reqrep0/rep.h>
 
 #include <mutex>
 #include <thread>
@@ -16,6 +13,9 @@
 
 namespace EasyIPC
 {
+	// Forward declare since users of this lib arent supposed to deal with nanomsg
+	class NngSocket;
+
 	class Server
 	{
 	public:
@@ -76,8 +76,8 @@ namespace EasyIPC
 		void receiveLoop();
 		void handleRequest(const std::string& message);
 
-		NngSocket pubSocket;
-		NngSocket repSocket;
+		std::unique_ptr<NngSocket> pubSocket;
+		std::unique_ptr<NngSocket> repSocket;
 
 		std::shared_ptr<EncryptionStrategy> encryptionStrategy;
 

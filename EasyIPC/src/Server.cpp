@@ -4,9 +4,16 @@
 #include <iostream>
 #include <fmt/format.h>
 
+#include "NngSocket.h"
+
+#include <nng/protocol/pubsub0/pub.h>
+#include <nng/protocol/reqrep0/rep.h>
+
 namespace EasyIPC
 {
 	Server::Server() :
+		pubSocket{ std::make_unique<NngSocket>() },
+		repSocket{ std::make_unique<NngSocket>() },
 		isRunning{ false },
 		isStarted{ false }
 	{
@@ -22,19 +29,19 @@ namespace EasyIPC
 	{
 		int returnValue{};
 
-		if ((returnValue = nng_pub0_open(&pubSocket.get())) != 0)
+		if ((returnValue = nng_pub0_open(&pubSocket->get())) != 0)
 		{
 			throw std::runtime_error{ "Failed to open PUB socket: " + std::string(nng_strerror(returnValue)) };
 		}
 
-		pubSocket.markOpen();
+		pubSocket->markOpen();
 
-		if ((returnValue = nng_rep0_open(&repSocket.get())) != 0)
+		if ((returnValue = nng_rep0_open(&repSocket->get())) != 0)
 		{
 			throw std::runtime_error{ "Failed to open REP socket: " + std::string(nng_strerror(returnValue)) };
 		}
 
-		repSocket.markOpen();
+		repSocket->markOpen();
 
 		std::string pubSocketUrl = fmt::format("{}:{}", url, port);
 		std::string repSocketUrl = fmt::format("{}:{}", url, port + 1);
@@ -42,12 +49,12 @@ namespace EasyIPC
 		//std::cout << "publisher socket url: " << pubSocketUrl << "\n";
 		//std::cout << "response socket url: " << repSocketUrl << "\n";
 
-		if ((returnValue = nng_listen(pubSocket.get(), pubSocketUrl.c_str(), nullptr, 0)) != 0)
+		if ((returnValue = nng_listen(pubSocket->get(), pubSocketUrl.c_str(), nullptr, 0)) != 0)
 		{
 			throw std::runtime_error{ "Failed to listen on PUB socket: " + std::string(nng_strerror(returnValue)) };
 		}
 
-		if ((returnValue = nng_listen(repSocket.get(), repSocketUrl.c_str(), nullptr, 0)) != 0)
+		if ((returnValue = nng_listen(repSocket->get(), repSocketUrl.c_str(), nullptr, 0)) != 0)
 		{
 			throw std::runtime_error{ "Failed to listen on REP socket: " + std::string(nng_strerror(returnValue)) };
 		}
@@ -67,8 +74,8 @@ namespace EasyIPC
 		if (isRunning)
 		{
 			isRunning = false;
-			pubSocket.close();
-			repSocket.close();
+			pubSocket->close();
+			repSocket->close();
 
 			if (receiveThread.joinable())
 			{
@@ -98,7 +105,7 @@ namespace EasyIPC
 			message = encryptionStrategy->encrypt(message);
 		}
 
-		int returnValue = nng_send(pubSocket.get(), message.data(), message.size(), 0);
+		int returnValue = nng_send(pubSocket->get(), message.data(), message.size(), 0);
 		if (returnValue != 0)
 		{
 			throw std::runtime_error{ "Failed to send message: " + std::string(nng_strerror(returnValue)) };
@@ -124,7 +131,7 @@ namespace EasyIPC
 		{
 			void* buffer = nullptr;
 			size_t size = 0;
-			int returnValue = nng_recv(repSocket.get(), &buffer, &size, NNG_FLAG_ALLOC);
+			int returnValue = nng_recv(repSocket->get(), &buffer, &size, NNG_FLAG_ALLOC);
 
 			if (returnValue == NNG_ECLOSED)
 				break;
@@ -185,19 +192,6 @@ namespace EasyIPC
 				}}
 				});
 
-			//if (handlerResponse.has_value())
-			//	responseJson = handlerResponse.value();
-			//else
-			//{
-			//	responseJson = {
-			//		{"event", "__response__"},
-			//		{"data", {
-			//			{"status", "success"}
-			//		}}
-			//	};
-			//}
-
-
 
 			std::string response = responseJson.dump();
 
@@ -206,7 +200,7 @@ namespace EasyIPC
 				response = encryptionStrategy->encrypt(response);
 			}
 
-			int returnValue = nng_send(repSocket.get(), response.data(), response.size(), 0);
+			int returnValue = nng_send(repSocket->get(), response.data(), response.size(), 0);
 			if (returnValue != 0)
 			{
 				std::cerr << "[EasyIPC::Server::handleRequest] Failed to send response: " << nng_strerror(returnValue) << "\n";
@@ -233,7 +227,7 @@ namespace EasyIPC
 				response = encryptionStrategy->encrypt(response);
 			}
 
-			int returnValue = nng_send(repSocket.get(), response.data(), response.size(), 0);
+			int returnValue = nng_send(repSocket->get(), response.data(), response.size(), 0);
 			if (returnValue != 0)
 			{
 				std::cerr << "[EasyIPC::Server::handleRequest] Failed to send response: " << nng_strerror(returnValue) << "\n";

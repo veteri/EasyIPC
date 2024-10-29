@@ -2,18 +2,18 @@
 
 #include <mutex>
 #include <thread>
+#include <memory>
 
-#include <nng/nng.h>
-#include <nng/protocol/pubsub0/sub.h>
-#include <nng/protocol/reqrep0/req.h>
 
 #include <nlohmann/json.hpp>
 
-#include "NngSocket.h"
 #include "Encryption/EncryptionStrategy.h"
 
 namespace EasyIPC
 {
+	// Forward declare since users of this lib arent supposed to deal with nanomsg
+	class NngSocket;
+
 	class Client
 	{
 	public:
@@ -59,8 +59,8 @@ namespace EasyIPC
 		void receiveLoop();
 		void handleMessage(const std::string& message);
 
-		NngSocket subSocket;
-		NngSocket reqSocket;
+		std::unique_ptr<NngSocket> subSocket;
+		std::unique_ptr<NngSocket> reqSocket;
 
 		std::shared_ptr<EncryptionStrategy> encryptionStrategy;
 

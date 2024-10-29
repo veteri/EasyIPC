@@ -5,13 +5,19 @@
 #include <iostream>
 #include <utility>
 
+#include <nng/nng.h>
+#include <nng/protocol/pubsub0/sub.h>
+#include <nng/protocol/reqrep0/req.h>
+
+#include "NngSocket.h"
+
 namespace EasyIPC
 {
 	Client::Client() :
-		subSocket{},
-		reqSocket{},
-		isRunning{false},
-		connected{false}
+		subSocket{ std::make_unique<NngSocket>() },
+		reqSocket{ std::make_unique<NngSocket>() },
+		isRunning{ false },
+		connected{ false }
 	{
 
 	}
@@ -26,20 +32,20 @@ namespace EasyIPC
 		int returnValue{};
 
 		// first open pub/sub socket so we can receive events
-		if ((returnValue = nng_sub0_open(&subSocket.get())) != 0)
+		if ((returnValue = nng_sub0_open(&subSocket->get())) != 0)
 		{
 			throw std::runtime_error{ "Failed to open SUB socket: " + std::string(nng_strerror(returnValue)) };
 		}
 
-		subSocket.markOpen();
+		subSocket->markOpen();
 
 		// then open req socket for typical request/response type interactions
-		if ((returnValue = nng_req0_open(&reqSocket.get())) != 0)
+		if ((returnValue = nng_req0_open(&reqSocket->get())) != 0)
 		{
 			throw std::runtime_error{ "Failed to open REQ socket: " + std::string(nng_strerror(returnValue)) };
 		}
 
-		reqSocket.markOpen();
+		reqSocket->markOpen();
 
 		std::string subSocketUrl = fmt::format("{}:{}", url, port);
 		std::string reqSocketUrl = fmt::format("{}:{}", url, port + 1);
@@ -50,10 +56,10 @@ namespace EasyIPC
 
 		while (attempts < maxRetries)
 		{
-			returnValue = nng_dial(subSocket.get(), subSocketUrl.c_str(), nullptr, 0);
+			returnValue = nng_dial(subSocket->get(), subSocketUrl.c_str(), nullptr, 0);
 			if (returnValue == 0)
 			{
-				returnValue = nng_dial(reqSocket.get(), reqSocketUrl.c_str(), nullptr, 0);
+				returnValue = nng_dial(reqSocket->get(), reqSocketUrl.c_str(), nullptr, 0);
 				if (returnValue == 0)
 				{
 					connectSuccess = true;
@@ -90,7 +96,7 @@ namespace EasyIPC
 			);
 		}
 
-		if ((returnValue = nng_setopt(subSocket.get(), NNG_OPT_SUB_SUBSCRIBE, "", 0)) != 0)
+		if ((returnValue = nng_setopt(subSocket->get(), NNG_OPT_SUB_SUBSCRIBE, "", 0)) != 0)
 		{
 			throw std::runtime_error{ "Failed to set subscribe option: " + std::string(nng_strerror(returnValue)) };
 		}
@@ -115,8 +121,8 @@ namespace EasyIPC
 		{
 			isRunning = false;
 
-			subSocket.close();
-			reqSocket.close();
+			subSocket->close();
+			reqSocket->close();
 
 			if (receiveThread.joinable())
 			{
@@ -155,7 +161,7 @@ namespace EasyIPC
 			message = encryptionStrategy->encrypt(message);
 		}
 
-		int returnValue = nng_send(reqSocket.get(), message.data(), message.size(), 0);
+		int returnValue = nng_send(reqSocket->get(), message.data(), message.size(), 0);
 		if (returnValue != 0)
 		{
 			throw std::runtime_error{ "Failed to send request: " + std::string(nng_strerror(returnValue)) };
@@ -163,7 +169,7 @@ namespace EasyIPC
 
 		char* buffer = nullptr;
 		size_t size = 0;
-		returnValue = nng_recv(reqSocket.get(), &buffer, &size, NNG_FLAG_ALLOC);
+		returnValue = nng_recv(reqSocket->get(), &buffer, &size, NNG_FLAG_ALLOC);
 		if (returnValue != 0)
 		{
 			throw std::runtime_error{ "Failed to receive response: " + std::string(nng_strerror(returnValue)) };
@@ -201,7 +207,7 @@ namespace EasyIPC
 		{
 			char* buffer = nullptr;
 			size_t size = 0;
-			int returnValue = nng_recv(subSocket.get(), &buffer, &size, NNG_FLAG_ALLOC);
+			int returnValue = nng_recv(subSocket->get(), &buffer, &size, NNG_FLAG_ALLOC);
 			if (returnValue == NNG_ECLOSED)
 				break;
 

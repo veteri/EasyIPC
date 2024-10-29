@@ -13,6 +13,8 @@
 vcpkg_installed/
 vcpkg_installed/*/
 vcpkg_installed/**
+scripts/
+scripts/*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

@@ -1,6 +1,7 @@
 #pragma once
 #include <nng/nng.h>
 
+
 namespace EasyIPC
 {
 	class NngSocket

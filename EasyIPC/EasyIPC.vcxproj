@@ -172,6 +172,9 @@
     <PostBuildEvent>
       <Command>xcopy /E /I /Y "$(ProjectDir)src\*.h" "$(OutDir)include"</Command>
     </PostBuildEvent>
+    <Lib>
+      <AdditionalDependencies>Ws2_32.lib;Iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Encryption\AesEaxEncryptionStrategy.h" />
