@@ -7,7 +7,6 @@
 #include <cryptopp/osrng.h>
 #include <cryptopp/hex.h>
 #include <stdexcept>
-#include <fmt/format.h>
 
 namespace EasyIPC
 {
@@ -17,7 +16,7 @@ namespace EasyIPC
 		size_t keyLength = encryptionKey.size();
 		if (keyLength != 16 && keyLength != 24 && keyLength != 32)
 		{
-			throw std::invalid_argument{ fmt::format("Invalid key length {}", encryptionKey.size()) };
+			throw std::invalid_argument{ std::string("Invalid key length ") + std::to_string(encryptionKey.size()) };
 		}
 	}
 

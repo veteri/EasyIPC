@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "Client.h"
 
-#include <fmt/format.h>
 #include <iostream>
 #include <utility>
 
@@ -47,8 +46,8 @@ namespace EasyIPC
 
 		reqSocket->markOpen();
 
-		std::string subSocketUrl = fmt::format("{}:{}", url, port);
-		std::string reqSocketUrl = fmt::format("{}:{}", url, port + 1);
+		std::string subSocketUrl = url + ":" + std::to_string(port);
+		std::string reqSocketUrl = url + ":" + std::to_string(port + 1);
 
 		// connect to server
 		int attempts{ 0 };
@@ -87,12 +86,13 @@ namespace EasyIPC
 		if (!connectSuccess)
 		{
 			throw std::runtime_error(
-				fmt::format(
-					"Failed to connect to server after {} retries. Last sub socket dial error: {}, Last req socket dial error: {}",
-					maxRetries,
-					lastSubDialError,
-					lastReqDialError
-				)
+		[&]() {
+					std::ostringstream oss;
+					oss << "Failed to connect to server after " << maxRetries
+						<< " retries. Last sub socket dial error: " << lastSubDialError
+						<< ", Last req socket dial error: " << lastReqDialError;
+					return oss.str();
+				}()
 			);
 		}
 

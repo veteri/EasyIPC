@@ -3,8 +3,6 @@
 #include <mutex>
 #include <thread>
 #include <memory>
-
-
 #include <nlohmann/json.hpp>
 
 #include "Encryption/EncryptionStrategy.h"

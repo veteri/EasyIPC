@@ -2,7 +2,6 @@
 #include "Server.h"
 
 #include <iostream>
-#include <fmt/format.h>
 
 #include "NngSocket.h"
 
@@ -43,8 +42,8 @@ namespace EasyIPC
 
 		repSocket->markOpen();
 
-		std::string pubSocketUrl = fmt::format("{}:{}", url, port);
-		std::string repSocketUrl = fmt::format("{}:{}", url, port + 1);
+		std::string pubSocketUrl = url + ":" + std::to_string(port);;
+		std::string repSocketUrl = url + ":" + std::to_string(port + 1);;
 
 		//std::cout << "publisher socket url: " << pubSocketUrl << "\n";
 		//std::cout << "response socket url: " << repSocketUrl << "\n";
@@ -174,10 +173,11 @@ namespace EasyIPC
 				else
 				{
 					std::cerr << "[EasyIPC::Server::handleRequest] Received event " << event << " but no handler was bound for it.\n";
+					std::string missingHandlerLabel = "Server has no handler bound for event: " + event;
 					handlerResponse = {
 						{"event", "__error__"},
 						{"data", {
-							{"message", fmt::format("Server has no handler bound for event '{}'", event) }
+							{"message", missingHandlerLabel }
 						}}
 					};
 				}
