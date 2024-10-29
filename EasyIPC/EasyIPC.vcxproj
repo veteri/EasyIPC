@@ -104,6 +104,9 @@
     <PostBuildEvent>
       <Command>xcopy /E /I /Y "$(ProjectDir)src\*.h" "$(OutDir)include"</Command>
     </PostBuildEvent>
+    <Lib>
+      <AdditionalDependencies>Ws2_32.lib;Iphlpapi.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -128,6 +131,9 @@
     <PostBuildEvent>
       <Command>xcopy /E /I /Y "$(ProjectDir)src\*.h" "$(OutDir)include"</Command>
     </PostBuildEvent>
+    <Lib>
+      <AdditionalDependencies>Ws2_32.lib;Iphlpapi.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -148,6 +154,9 @@
     <PostBuildEvent>
       <Command>xcopy /E /I /Y "$(ProjectDir)src\*.h" "$(OutDir)include"</Command>
     </PostBuildEvent>
+    <Lib>
+      <AdditionalDependencies>Ws2_32.lib;Iphlpapi.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -173,7 +182,7 @@
       <Command>xcopy /E /I /Y "$(ProjectDir)src\*.h" "$(OutDir)include"</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>Ws2_32.lib;Iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Ws2_32.lib;Iphlpapi.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
