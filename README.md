@@ -1,3 +1,4 @@
+![banner](https://i.imgur.com/YCsghuF.png)  
 # EasyIPC - Inter Process Communication for CPP
 
 **EasyIPC is a small inter process communication (IPC) library for C++.**\
