@@ -229,7 +229,6 @@ However this shouldn't be necessary.
     "name": "name",
     "version": "1.0.0",
     "dependencies": [
-        "fmt",
         "nlohmann-json",
         "nng",
         "cryptopp"
