@@ -4,6 +4,8 @@
 **EasyIPC is a small inter process communication (IPC) library for C++.**\
 **If you want to communicate between two processes in an easy event driven way using JSON, this library is for you.**
 
+[-> EasyIPC Example Repo](https://github.com/veteri/EasyIPC-example)
+
 ## Outline
 
 1. [Conceptual Overview](#Conceptual-overview)
